@@ -47,8 +47,9 @@ export default function SpotTheDifference() {
   
   const handleClick = (event) => {
     const rect = event.target.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
+    const x = event.touches ? event.touches[0].clientX - rect.left : event.clientX - rect.left;
+    const y = event.touches ? event.touches[0].clientY - rect.top : event.clientY - rect.top;
+    
     console.log(`{ x: ${x}, y: ${y}, radius: 15 }`);
     currentLevel.differences.forEach((diff, index) => {
       const dx = x - diff.x;
@@ -95,7 +96,7 @@ export default function SpotTheDifference() {
           />
         ))}
       </div>
-      <div className="flex gap-4 mt-4">
+      <div className="flex flex-col md:flex-row gap-4 mt-4">
         <div className="relative border p-2" onClick={handleClick}>
         
 
