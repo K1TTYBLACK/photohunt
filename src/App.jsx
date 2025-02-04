@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const SHOW_CLUES = false;
 const levels = [
@@ -23,13 +23,7 @@ const levels = [
       { x: 392, y: 299.5, radius: 15 },
       { x: 213, y: 293.5, radius: 15 },
     ],
-  },
-  {
-    differences: [
-      { x: 185, y: 65, radius: 15 },
-      { x: 110, y: 127, radius: 18 }
-    ],
-  },
+  }
 ];
 
 export default function SpotTheDifference() {
@@ -37,6 +31,43 @@ export default function SpotTheDifference() {
   const [found, setFound] = useState(SHOW_CLUES ? levels[levelIndex].differences.map((_, i) => i) : []);
   const [timeLeft, setTimeLeft] = useState(120);
   const currentLevel = levels[levelIndex];
+  const imgRef = useRef(null);
+  const [dimensions, setDimensions] = useState({
+    initialWidth: null,
+    initialHeight: null,
+    currentWidth: null,
+    currentHeight: null,
+  });
+  useEffect(() => {
+    const updateDimensions = () => {
+      if (imgRef.current) {
+        setDimensions((prev) => {
+          const newDims = {
+            ...prev,
+            currentWidth: imgRef.current.clientWidth,
+            currentHeight: imgRef.current.clientHeight,
+          };
+          console.log("Updated Dimensions:", newDims);
+          return newDims;
+        });
+      }
+    };
+
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
+  const handleImageLoad = () => {
+    if (imgRef.current) {
+      const newDims = {
+        initialWidth: imgRef.current.naturalWidth,
+        initialHeight: imgRef.current.naturalHeight,
+        currentWidth: imgRef.current.clientWidth,
+        currentHeight: imgRef.current.clientHeight,
+      };
+      console.log("Initial & Current Dimensions on Load:", newDims);
+      setDimensions(newDims);
+    }
+  };
 
   useEffect(() => {
     if (timeLeft > 0) {
@@ -46,10 +77,24 @@ export default function SpotTheDifference() {
   }, [timeLeft]);
   
   const handleTap = (event) => {
+
+  
     const rect = event.target.getBoundingClientRect();
-    const x = (event.touches ? event.touches[0].clientX : event.clientX) - rect.left;
-    const y = (event.touches ? event.touches[0].clientY : event.clientY) - rect.top;
+    
+    // Get raw click/tap coordinates relative to the image
+    const rawX = (event.touches ? event.touches[0].clientX : event.clientX) - rect.left;
+    const rawY = (event.touches ? event.touches[0].clientY : event.clientY) - rect.top;
+  
+    // Scale factors to map from current size to initial size
+    const scaleX = 400 / dimensions.currentWidth;
+    const scaleY = 400 / dimensions.currentHeight;
+  
+    // Adjust coordinates to match the original image dimensions
+    const x = rawX * scaleX;
+    const y = rawY * scaleY;
+  
     console.log(`{ x: ${x}, y: ${y}, radius: 15 }`);
+  
     currentLevel.differences.forEach((diff, index) => {
       const dx = x - diff.x;
       const dy = y - diff.y;
@@ -58,6 +103,7 @@ export default function SpotTheDifference() {
       }
     });
   };
+  
 
   useEffect(() => {
     if (found.length === currentLevel.differences.length) {
@@ -71,9 +117,8 @@ export default function SpotTheDifference() {
   
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
-      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
       <div className="flex flex-row items-end">
-        <img src='/logo.png' alt="progress indicator" className="w-20 h-20 mr-5" />
+        <img src='/logo.png' alt="progress indicator" className="w-16 h-16 sm:w-20 sm:h-20 mr-5" />
         <h1 className="text-xl font-bold">PHOTOHUNT</h1>
       </div>
       <p>Level: {levelIndex + 1}/{levels.length}</p>
@@ -94,34 +139,50 @@ export default function SpotTheDifference() {
       </div>
       <div className="flex flex-col md:flex-row gap-4 mt-4">
         <div className="relative border p-2" onClick={handleTap} onTouchStart={handleTap}>
-          <img src={`/levels/${levelIndex}/original.png`} alt="Original" className="w-[400px]" />
-          {found.map((index) => (
-            <div
-              key={index}
-              className="absolute bg-red-500 opacity-50 rounded-full"
-              style={{
-                width: currentLevel.differences[index].radius * 2 + "px",
-                height: currentLevel.differences[index].radius * 2 + "px",
-                top: currentLevel.differences[index].y - currentLevel.differences[index].radius + "px",
-                left: currentLevel.differences[index].x - currentLevel.differences[index].radius + "px",
-              }}
-            ></div>
-          ))}
+          <img ref={imgRef} onLoad={handleImageLoad} src={`/levels/${levelIndex}/original.png`} alt="Original" className="w-[400px]" />
+          {found.map((index) => {
+  const diff = currentLevel.differences[index];
+
+  // Scale factors based on initial and current image dimensions
+  const scaleX = dimensions.currentWidth / 400;
+  const scaleY = dimensions.currentHeight / 400;
+
+  return (
+    <div
+      key={index}
+      className="absolute bg-red-500 opacity-50 rounded-full transform -translate-x-1/2 -translate-y-1/2"
+      style={{
+        width: `${diff.radius * 2 * scaleX}px`,
+        height: `${diff.radius * 2 * scaleY}px`,
+        top: `${diff.y * scaleY}px`,
+        left: `${diff.x * scaleX}px`,
+      }}
+    ></div>
+  );
+})}
         </div>
         <div className="relative border p-2" onClick={handleTap} onTouchStart={handleTap}>
-          <img src={`/levels/${levelIndex}/modified.png`} alt="Modified" className="w-[400px]" />
-          {found.map((index) => (
-            <div
-              key={index}
-              className="absolute bg-red-500 opacity-50 rounded-full"
-              style={{
-                width: currentLevel.differences[index].radius * 2 + "px",
-                height: currentLevel.differences[index].radius * 2 + "px",
-                top: currentLevel.differences[index].y - currentLevel.differences[index].radius + "px",
-                left: currentLevel.differences[index].x - currentLevel.differences[index].radius + "px",
-              }}
-            ></div>
-          ))}
+          <img ref={imgRef} onLoad={handleImageLoad} src={`/levels/${levelIndex}/modified.png`} alt="Modified" className="w-[400px]" />
+          {found.map((index) => {
+  const diff = currentLevel.differences[index];
+
+  // Scale factors based on initial and current image dimensions
+  const scaleX = dimensions.currentWidth / 400;
+  const scaleY = dimensions.currentHeight / 400;
+
+  return (
+    <div
+      key={index}
+      className="absolute bg-red-500 opacity-50 rounded-full transform -translate-x-1/2 -translate-y-1/2"
+      style={{
+        width: `${diff.radius * 2 * scaleX}px`,
+        height: `${diff.radius * 2 * scaleY}px`,
+        top: `${diff.y * scaleY}px`,
+        left: `${diff.x * scaleX}px`,
+      }}
+    ></div>
+  );
+})}
         </div>
       </div>
     </div>

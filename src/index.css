@@ -4,7 +4,7 @@
 
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Montserrat, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -17,11 +17,12 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   
-  height: 100vh;
+  height: auto;
+  margin: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0;
+  width: 100%;
 }
 
 a {
@@ -37,7 +38,7 @@ body {
   font-family: 'Montserrat', sans-serif;
   margin: 0;
   display: flex;
-  place-items: center;
+
   min-width: 320px;
   min-height: 100vh;
 }
