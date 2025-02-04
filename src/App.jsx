@@ -118,8 +118,8 @@ export default function SpotTheDifference() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
       <div className="flex flex-row items-end">
-        <img src='/logo.png' alt="progress indicator" className="w-16 h-16 sm:w-20 sm:h-20 mr-5" />
-        <h1 className="text-xl font-bold">PHOTOHUNT</h1>
+        <img src='/logo.png' alt="progress indicator" className="w-12 h-12 mr-2 sm:w-20 sm:h-20 sm:mr-5" />
+        <p className="text-3xl sm:text-6xl font-bold">PHOTOHUNT</p>
       </div>
       <p>Level: {levelIndex + 1}/{levels.length}</p>
       {found.length === currentLevel.differences.length ? (
