@@ -20,8 +20,8 @@ Make sure you have the following installed on your system:
 ### 1. Clone the repository
 
 ```sh
-git clone <repository_url>
-cd <repository_name>
+git clone https://github.com/K1TTYBLACK/photohunt.git
+cd photohunt
 ```
 
 ### 2. Install dependencies
