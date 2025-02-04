@@ -45,11 +45,10 @@ export default function SpotTheDifference() {
     }
   }, [timeLeft]);
   
-  const handleClick = (event) => {
+  const handleTap = (event) => {
     const rect = event.target.getBoundingClientRect();
-    const x = event.touches ? event.touches[0].clientX - rect.left : event.clientX - rect.left;
-    const y = event.touches ? event.touches[0].clientY - rect.top : event.clientY - rect.top;
-    
+    const x = (event.touches ? event.touches[0].clientX : event.clientX) - rect.left;
+    const y = (event.touches ? event.touches[0].clientY : event.clientY) - rect.top;
     console.log(`{ x: ${x}, y: ${y}, radius: 15 }`);
     currentLevel.differences.forEach((diff, index) => {
       const dx = x - diff.x;
@@ -72,20 +71,17 @@ export default function SpotTheDifference() {
   
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
       <div className="flex flex-row items-end">
-        <img
-            src='/logo.png'
-            alt="progress indicator"
-            className={`w-20 h-20 mr-5 `}
-          />
-        <h1 className="text-xl font-bold">PHOTOHUNT</h1></div>
-        <p>Level: {levelIndex + 1}/{levels.length}</p>
-        {found.length === currentLevel.differences.length ? (
-            <p className="text-green-500">Level Complete!</p>
-          ) : (
-            <p>Time Left: {timeLeft}s</p>
-          )}
-      
+        <img src='/logo.png' alt="progress indicator" className="w-20 h-20 mr-5" />
+        <h1 className="text-xl font-bold">PHOTOHUNT</h1>
+      </div>
+      <p>Level: {levelIndex + 1}/{levels.length}</p>
+      {found.length === currentLevel.differences.length ? (
+        <p className="text-green-500">Level Complete!</p>
+      ) : (
+        <p>Time Left: {timeLeft}s</p>
+      )}
       <div className="flex gap-2 mt-2">
         {currentLevel.differences.map((_, index) => (
           <img
@@ -97,10 +93,8 @@ export default function SpotTheDifference() {
         ))}
       </div>
       <div className="flex flex-col md:flex-row gap-4 mt-4">
-        <div className="relative border p-2" onClick={handleClick}>
-        
-
-        <img src={`/levels/${levelIndex}/original.png`} alt="Original" className="w-[400px]" />
+        <div className="relative border p-2" onClick={handleTap} onTouchStart={handleTap}>
+          <img src={`/levels/${levelIndex}/original.png`} alt="Original" className="w-[400px]" />
           {found.map((index) => (
             <div
               key={index}
@@ -114,8 +108,8 @@ export default function SpotTheDifference() {
             ></div>
           ))}
         </div>
-        <div className="relative border p-2" onClick={handleClick}>
-        <img src={`/levels/${levelIndex}/modified.png`} alt="Modified" className="w-[400px]" />
+        <div className="relative border p-2" onClick={handleTap} onTouchStart={handleTap}>
+          <img src={`/levels/${levelIndex}/modified.png`} alt="Modified" className="w-[400px]" />
           {found.map((index) => (
             <div
               key={index}
@@ -130,7 +124,6 @@ export default function SpotTheDifference() {
           ))}
         </div>
       </div>
-      
     </div>
   );
 }
