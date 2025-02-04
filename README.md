@@ -5,6 +5,8 @@ PhotoHunt is a fun and engaging game where players find differences between two 
 - Multiple levels with increasing difficulty
 - Timer to challenge your speed
 
+**Live preview:** https://photohunt-ashy.vercel.app/
+
 ## Screenshots
 
 ![Screenshot 1](preview.png)
