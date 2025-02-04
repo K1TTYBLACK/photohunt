@@ -1,8 +1,46 @@
-# React + Vite
+# PhotoHunt
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+PhotoHunt is a fun and engaging game where players find differences between two similar images. Test your observation skills and enjoy hours of entertainment!
 
-Currently, two official plugins are available:
+- Multiple levels with increasing difficulty
+- Timer to challenge your speed
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Screenshots
+
+![Screenshot 1](preview.png)
+
+## Prerequisites
+
+Make sure you have the following installed on your system:
+- [Node.js](https://nodejs.org/) (Recommended: latest LTS version)
+- [npm](https://www.npmjs.com/) (Comes with Node.js) or [Yarn](https://yarnpkg.com/) / [pnpm](https://pnpm.io/)
+
+## Getting Started
+
+### 1. Clone the repository
+
+```sh
+git clone <repository_url>
+cd <repository_name>
+```
+
+### 2. Install dependencies
+
+Using npm:
+```sh
+npm install @tailwindcss/vite react react-dom
+```
+
+### 3. Start the development server
+
+Using npm:
+```sh
+npm run dev
+```
+
+### 4. Open in Browser
+
+Once the server starts, open your browser and go to:
+```
+http://localhost:5173
+```
